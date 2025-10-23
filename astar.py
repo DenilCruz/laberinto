@@ -24,7 +24,6 @@ class AStar:
             _, actual = heapq.heappop(abiertos)
 
             if actual == self.fin:
-                # Reconstruir camino óptimo
                 camino = [actual]
                 while actual in came_from:
                     actual = came_from[actual]
@@ -33,11 +32,11 @@ class AStar:
                 return camino
 
             for vecino in self.grafo.adyacentesDeVertice(actual):
-                tentative_g = g_score[actual] + 1  # Cada paso cuesta 1
+                tentative_g = g_score[actual] + 1 
                 if tentative_g < g_score[vecino]:
                     came_from[vecino] = actual
                     g_score[vecino] = tentative_g
                     f_score[vecino] = tentative_g + self.heuristica(vecino, self.fin)
                     heapq.heappush(abiertos, (f_score[vecino], vecino))
 
-        return None  # No hay camino
+        return None

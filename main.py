@@ -7,11 +7,10 @@ from dfs import DFS
 from astar import AStar
 
 
-ANCHO, ALTO = 27, 27  # Debe ser impar
+ANCHO, ALTO = 27, 27
 TAM_CELDA = 25
 FPS = 60
 
-# Colores
 NEGRO = (0, 0, 0)
 BLANCO = (255, 255, 255)
 GRIS = (60, 60, 60)
@@ -74,16 +73,12 @@ def main():
     dibujar_laberinto(grafo)
     pygame.display.flip()
 
-    # Esperar un poco antes de resolver
     pygame.time.wait(1000)
 
-    # Resolver usando BFS (de tus clases)
     bfs = BFS(grafo, inicio)
     recorrido = bfs.ejecutar_desde_inicio()
 
-    # Si el vértice final está en el recorrido, pintamos solo ese camino
     if fin in recorrido:
-        # Cortar el recorrido hasta el fin
         indice = recorrido.index(fin)
         camino_final = recorrido[:indice + 1]
         dibujar_laberinto(grafo, camino=camino_final)
@@ -99,7 +94,6 @@ def main():
     else:
         print("⚠ No se encontró camino al final") '''
 
-    # Bucle principal
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
