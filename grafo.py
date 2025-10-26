@@ -36,8 +36,9 @@ class Grafo:
     def insertarArista(self, origen, destino):
 
         if self.existeArista(origen, destino):
-            raise ExcepcionAristaYaExiste(f"La arista ({origen}, {destino}) ya existe.")
-
+            #raise ExcepcionAristaYaExiste(f"La arista ({origen}, {destino}) ya existe.")
+            pass
+        
         posOrigen = self.getNroDelVertice(origen)
         posDestino = self.getNroDelVertice(destino)
         

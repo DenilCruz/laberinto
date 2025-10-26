@@ -7,7 +7,7 @@ from dfs import DFS
 from astar import AStar
 
 
-ANCHO, ALTO = 27, 27
+ANCHO, ALTO = 25,25
 TAM_CELDA = 25
 FPS = 60
 
@@ -36,6 +36,7 @@ def generar_laberinto(grafo, ancho, alto):
 
     def dfs(x, y):
         visitado[x][y] = True
+    
         direcciones = [(-2, 0), (2, 0), (0, -2), (0, 2)]
         random.shuffle(direcciones)
 
@@ -46,10 +47,20 @@ def generar_laberinto(grafo, ancho, alto):
                 mx, my = x + dx // 2, y + dy // 2
                 grafo.insertarArista((x, y), (mx, my))
                 grafo.insertarArista((mx, my), (nx, ny))
-                grafo.insertarArista((x, y), (nx, ny))
                 dfs(nx, ny)
 
     dfs(0, 0)
+
+    x_final, y_final = ALTO - 1, ANCHO - 1
+    visitado[x_final][y_final] = True 
+
+    if x_final > 0:
+        grafo.insertarArista((x_final - 1, y_final), (x_final, y_final))
+        grafo.insertarArista((x_final, y_final), (x_final - 1, y_final))
+    if y_final > 0:
+        grafo.insertarArista((x_final, y_final - 1), (x_final, y_final))
+        grafo.insertarArista((x_final, y_final), (x_final, y_final - 1))
+
     return grafo
 
 def dibujar_laberinto(grafo, camino=None):
@@ -74,31 +85,34 @@ def main():
     pygame.display.flip()
 
     pygame.time.wait(1000)
-
-    bfs = BFS(grafo, inicio)
-    recorrido = bfs.ejecutar_desde_inicio()
-
-    if fin in recorrido:
-        indice = recorrido.index(fin)
-        camino_final = recorrido[:indice + 1]
-        dibujar_laberinto(grafo, camino=camino_final)
-    else:
-        print("⚠ No se encontró camino al final")
     
     # Resolver con A*
-    '''a_star = AStar(grafo, inicio, fin)
+    a_star = AStar(grafo, inicio, fin)
     camino_final = a_star.encontrar_camino()
 
     if camino_final:
         dibujar_laberinto(grafo, camino=camino_final)
     else:
-        print("⚠ No se encontró camino al final") '''
+        print("⚠ No se encontró camino al final")
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    grafo = generar_grafo_laberinto(ANCHO, ALTO)  # <- crear nuevo grafo
+                    grafo = generar_laberinto(grafo, ANCHO, ALTO)
+                    inicio, fin = (0, 0), (ALTO - 1, ANCHO - 1)
+                    dibujar_laberinto(grafo)
+                    a_star = AStar(grafo, inicio, fin)
+                    camino_final = a_star.encontrar_camino()
+
+                    if camino_final:
+                        dibujar_laberinto(grafo, camino=camino_final)
+                    else:
+                        print("⚠ No se encontró camino al final")
         clock.tick(FPS)
 
 if __name__ == "__main__":
