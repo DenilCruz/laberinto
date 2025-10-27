@@ -47,6 +47,7 @@ def main():
     #grafo = generar_laberinto(grafo, ANCHO, ALTO)
     grafo = generar_laberinto_kruskal(grafo, ANCHO, ALTO)
     
+    
     inicio, fin = (0, 0), (ALTO - 1, ANCHO - 1)
 
     dibujar_laberinto_pesado(grafo)
@@ -62,26 +63,42 @@ def main():
         dibujar_laberinto_pesado(grafo, camino=camino_final)
     else:
         print("⚠ No se encontró camino al final")
-
+        
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_1:
                     # Regenerar laberinto con grafo pesado
                     grafo = generar_grafo_pesado_laberinto(ANCHO, ALTO) 
                     grafo = generar_laberinto(grafo, ANCHO, ALTO)
-                    inicio, fin = (0, 0), (ALTO - 1, ANCHO - 1)
                     dibujar_laberinto_pesado(grafo)
                     a_star = AStar(grafo, inicio, fin)
                     camino_final = a_star.encontrar_camino()
+
+                    pygame.display.set_caption("Laberinto con Grafo Pesado DFS")
 
                     if camino_final:
                         dibujar_laberinto_pesado(grafo, camino=camino_final)
                     else:
                         print("⚠ No se encontró camino al final")
+
+                elif event.key == pygame.K_2:
+                    grafo = generar_grafo_pesado_laberinto(ANCHO, ALTO) 
+                    grafo = generar_laberinto_kruskal(grafo, ANCHO, ALTO)
+                    dibujar_laberinto_pesado(grafo)
+                    a_star = AStar(grafo, inicio, fin)
+                    camino_final = a_star.encontrar_camino()
+                    
+                    pygame.display.set_caption("Laberinto con Grafo Pesado Kruskal")
+
+                    if camino_final:
+                        dibujar_laberinto_pesado(grafo, camino=camino_final)
+                    else:
+                        print("⚠ No se encontró camino al final")
+
         clock.tick(FPS)
 
 if __name__ == "__main__":

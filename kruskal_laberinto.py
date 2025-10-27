@@ -1,66 +1,50 @@
 import random
-from grafo_pesado import GrafoPesado
 
 class ConjuntoDisjunto:
-    """Estructura de Unión y Búsqueda (Union-Find)."""
     def __init__(self, elementos):
         self.padre = {e: e for e in elementos}
         self.rango = {e: 0 for e in elementos}
 
-    def encontrar(self, elemento):
-        if self.padre[elemento] != elemento:
-            self.padre[elemento] = self.encontrar(self.padre[elemento])
-        return self.padre[elemento]
+    def encontrar_raiz(self, e):
+        if self.padre[e] != e:
+            self.padre[e] = self.encontrar_raiz(self.padre[e])
+        return self.padre[e]
 
     def unir(self, a, b):
-        raiz_a = self.encontrar(a)
-        raiz_b = self.encontrar(b)
-        if raiz_a == raiz_b:
+        ra = self.encontrar_raiz(a)
+        rb = self.encontrar_raiz(b)
+        if ra == rb:
             return False
-        if self.rango[raiz_a] < self.rango[raiz_b]:
-            self.padre[raiz_a] = raiz_b
-        elif self.rango[raiz_a] > self.rango[raiz_b]:
-            self.padre[raiz_b] = raiz_a
+        if self.rango[ra] < self.rango[rb]:
+            self.padre[ra] = rb
+        elif self.rango[ra] > self.rango[rb]:
+            self.padre[rb] = ra
         else:
-            self.padre[raiz_b] = raiz_a
-            self.rango[raiz_a] += 1
+            self.padre[rb] = ra
+            self.rango[ra] += 1
         return True
 
+
 def generar_laberinto_kruskal(grafo, ancho, alto):
-    """Genera un laberinto usando el algoritmo de Kruskal (versión simple)."""
-    
-    # Limpiar el grafo existente
-    for i in range(len(grafo.listas_de_adyacentes)):
-        grafo.listas_de_adyacentes[i] = []
-    
-    # Crear todas las celdas (puntos en grid 2D)
-    for x in range(alto):
-        for y in range(ancho):
-            if not grafo.existe_vertice((x, y)):
-                grafo.insertar_vertice((x, y))
-    
-    # Lista de todas las posibles paredes horizontales y verticales
+    # Usaremos una cuadrícula donde solo las posiciones pares son celdas reales
+    celdas = [(x, y) for x in range(0, alto, 2) for y in range(0, ancho, 2)]
     paredes = []
-    
-    # Paredes horizontales (entre filas)
-    for x in range(alto - 1):
-        for y in range(ancho):
-            paredes.append(((x, y), (x + 1, y), random.random()))
-    
-    # Paredes verticales (entre columnas)
-    for x in range(alto):
-        for y in range(ancho - 1):
-            paredes.append(((x, y), (x, y + 1), random.random()))
-    
-    # Mezclar paredes
+
+    # Generar todas las paredes entre celdas
+    for x, y in celdas:
+        for dx, dy in [(-2, 0), (2, 0), (0, -2), (0, 2)]:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < alto and 0 <= ny < ancho:
+                paredes.append(((x, y), (nx, ny)))
+
     random.shuffle(paredes)
-    
+    conjunto = ConjuntoDisjunto(celdas)
+
     # Aplicar Kruskal
-    vertices = [(i, j) for i in range(alto) for j in range(ancho)]
-    conjunto = ConjuntoDisjunto(vertices)
-    
-    for v1, v2, peso in paredes:
-        if conjunto.unir(v1, v2):
-            grafo.insertar_arista(v1, v2, peso)
-    
+    for (x, y), (nx, ny) in paredes:
+        if conjunto.unir((x, y), (nx, ny)):
+            mx, my = (x + nx) // 2, (y + ny) // 2 
+            grafo.insertar_arista((x, y), (mx, my), 1)
+            grafo.insertar_arista((mx, my), (nx, ny), 1)
+
     return grafo
