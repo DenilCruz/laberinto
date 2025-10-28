@@ -7,7 +7,6 @@ class AStar:
         self.fin = fin
 
     def heuristica(self, a, b):
-        # Distancia Manhattan para laberintos
         return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
     def encontrar_camino(self):

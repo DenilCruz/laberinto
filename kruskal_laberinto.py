@@ -26,11 +26,11 @@ class ConjuntoDisjunto:
 
 
 def generar_laberinto_kruskal(grafo, ancho, alto):
-    # Usaremos una cuadrícula donde solo las posiciones pares son celdas reales
+
     celdas = [(x, y) for x in range(0, alto, 2) for y in range(0, ancho, 2)]
     paredes = []
 
-    # Generar todas las paredes entre celdas
+
     for x, y in celdas:
         for dx, dy in [(-2, 0), (2, 0), (0, -2), (0, 2)]:
             nx, ny = x + dx, y + dy
@@ -40,7 +40,6 @@ def generar_laberinto_kruskal(grafo, ancho, alto):
     random.shuffle(paredes)
     conjunto = ConjuntoDisjunto(celdas)
 
-    # Aplicar Kruskal
     for (x, y), (nx, ny) in paredes:
         if conjunto.unir((x, y), (nx, ny)):
             mx, my = (x + nx) // 2, (y + ny) // 2 

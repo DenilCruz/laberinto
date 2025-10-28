@@ -89,7 +89,7 @@ class GrafoPesado:
 
     def cantidad_de_aristas(self):
         total = sum(len(lista) for lista in self.listas_de_adyacentes)
-        return total // 2  # porque es no dirigido
+        return total // 2
 
     def adyacentes_de_vertice(self, vertice):
         pos = self.indice_de_vertice(vertice)
