@@ -53,10 +53,6 @@ class GrafoPesado:
         ady1 = AdyacenteConPeso(pos_vertice2, peso)
         ady2 = AdyacenteConPeso(pos_vertice1, peso)
 
-        if ady1 in adyacentes_de_vertice1:
-            #raise ExcepcionAristaYaExiste("La arista ya existe.")
-            pass
-
         adyacentes_de_vertice1.append(ady1)
         adyacentes_de_vertice2.append(ady2)
 
@@ -109,13 +105,3 @@ class GrafoPesado:
             ]
             resultado += f"{vertice} -> {ady}\n"
         return resultado
-
-'''from grafo_pesado import GrafoPesado
-
-g = GrafoPesado(["A", "B", "C"])
-g.insertar_arista("A", "B", 3)
-g.insertar_arista("A", "C", 1.5)
-
-print(g)
-print("Adyacentes de A:", g.adyacentes_de_vertice("A"))
-'''
